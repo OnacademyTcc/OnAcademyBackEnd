@@ -18,12 +18,12 @@ public class CloudinaryConfig {
 	 * application.properties.
 	 */
 
-	@Value("${cloudinary.cloud_name}")
-	private String cloudName;
-	@Value("${cloudinary.api_key}")
-	private String apiKey;
-	@Value("${cloudinary.api_secret}")
-	private String apiSecret;
+
+	private String cloudName = "dnqcwflgu";
+	
+	private String apiKey = "828664138232486";
+	
+	private String apiSecret = "QlRCJ7Hnvus2jQMpsKi62SrYUwM";
 
 	/**
 	 * @ Bean = Método que cria um objeto que ele vai gerenciar. Esse objeto pode
