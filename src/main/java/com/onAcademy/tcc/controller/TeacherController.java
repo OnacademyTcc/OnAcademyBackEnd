@@ -131,17 +131,9 @@ public class TeacherController {
 		if (!teacher.getEmailDocente().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
 			throw new IllegalArgumentException("O email fornecido não tem formato válido.");
 		}
-		if (teacherRepo.existsByEmailDocente(teacher.getEmailDocente())) {
-			throw new IllegalArgumentException("Email já cadastrado.");
-		} else if (studentRepo.existsByEmailAluno(teacher.getEmailDocente())) {
-			throw new IllegalArgumentException("Email já cadastrado.");
-		}
-
+		
 		if (!teacher.getTelefoneDocente().matches("\\d{11}")) {
 			throw new IllegalArgumentException("Telefone deve conter exatamente 11 dígitos numéricos.");
-		}
-		if (teacherRepo.existsByTelefoneDocente(teacher.getTelefoneDocente())) {
-			throw new IllegalArgumentException("Telefone já cadastrado.");
 		}
 
 		if (teacher.getDisciplines().isEmpty()) {
@@ -270,7 +262,7 @@ public class TeacherController {
 			}
 			return ResponseEntity.ok(atualizado);
 		} catch (IllegalArgumentException e) {
-			return ResponseEntity.badRequest().body(Map.of("erro", "Dados inválidos", "detalhes", e.getMessage()));
+			return ResponseEntity.badRequest().body(Map.of("erro", "Dados inválidos, caiu no cacth", "detalhes", e.getMessage()));
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(Map.of("error", "Erro ao atualizar professor: " + e.getMessage()));
 		}
