@@ -1,6 +1,5 @@
 package com.onAcademy.tcc.controller;
 
-import java.sql.Date;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +9,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.onAcademy.tcc.dto.LoginTeacherDTO;
 import com.onAcademy.tcc.dto.TeacherDTO;
-import com.onAcademy.tcc.model.Discipline;
-import com.onAcademy.tcc.model.Student;
 import com.onAcademy.tcc.model.Teacher;
 import com.onAcademy.tcc.repository.DisciplineRepo;
 import com.onAcademy.tcc.repository.StudentRepo;
@@ -125,6 +122,9 @@ public class TeacherController {
 		if (teacher.getDataNascimentoDocente() == null) {
 			throw new IllegalArgumentException("Por favor preencha a data de nascimento.");
 		}
+		if (studentRepo.existsByEmailAluno(teacher.getEmailDocente())) {
+			throw new IllegalArgumentException("Email já cadastrado como aluno.");
+		}
 		if (teacher.getEmailDocente().isEmpty()) {
 			throw new IllegalArgumentException("Por favor preencha o campo email.");
 		}
@@ -135,9 +135,8 @@ public class TeacherController {
 		if (!teacher.getTelefoneDocente().matches("\\d{11}")) {
 			throw new IllegalArgumentException("Telefone deve conter exatamente 11 dígitos numéricos.");
 		}
-
-		if (teacher.getDisciplines().isEmpty()) {
-			throw new IllegalArgumentException("Por favor preencha com no mínimo uma disciplina.");
+		if (teacherRepo.existsByTelefoneDocente(teacher.getTelefoneDocente())) {
+			throw new IllegalArgumentException("Telefone já cadastrado.");
 		}
 
 	}
@@ -262,7 +261,7 @@ public class TeacherController {
 			}
 			return ResponseEntity.ok(atualizado);
 		} catch (IllegalArgumentException e) {
-			return ResponseEntity.badRequest().body(Map.of("erro", "Dados inválidos, caiu no cacth", "detalhes", e.getMessage()));
+			return ResponseEntity.badRequest().body(Map.of("erro", "Dados inválidos", "detalhes", e.getMessage()));
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(Map.of("error", "Erro ao atualizar professor: " + e.getMessage()));
 		}
