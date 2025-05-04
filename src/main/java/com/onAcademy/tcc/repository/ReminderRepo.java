@@ -32,4 +32,11 @@ public interface ReminderRepo extends JpaRepository<Reminder, Long> {
      * @return Uma lista de lembretes criados pelo professor.
      */
     List<Reminder> findByCreatedBy(Teacher teacher);
+    
+    /**
+     * Busca todos os lembretes criados por instituições.
+     *
+     * @return Uma lista de lembretes criados por instituições.
+     */
+    List<Reminder> findByCreatedByInstitutionIsNotNull();
 }
