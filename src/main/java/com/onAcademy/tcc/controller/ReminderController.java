@@ -139,7 +139,7 @@ public class ReminderController {
 	 */
 	@GetMapping("/reminder/teacher/{teacherId}")
 	public ResponseEntity<List<ReminderDTO>> buscarPorCreatedBy(@PathVariable Long teacherId) {
-		List<Reminder> lembretes = reminderService.buscarLembretePorCreatedBy(teacherId);
+		List<Reminder> lembretes = reminderService.buscarLembretePorCreatedByOuInstitutions(teacherId);
 
 		if (lembretes.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

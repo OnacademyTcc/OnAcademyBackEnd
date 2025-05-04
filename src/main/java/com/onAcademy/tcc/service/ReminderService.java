@@ -1,5 +1,6 @@
 package com.onAcademy.tcc.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -72,18 +73,31 @@ public class ReminderService {
 	 * Busca lembretes filtrando pelo ID do professor que criou o lembrete.
 	 * 
 	 * - O método retorna todos os lembretes criados pelo professor identificado
-	 * pelo `teacherId`. - Caso o professor não seja encontrado no banco de dados, é
-	 * retornada uma lista vazia.
+	 * pelo `teacherId` e os lembretes criados pela instituição. - Caso o professor não seja encontrado no banco de dados, é
+	 * retornada uma lista apenas com os lembretes de instituição.
 	 * 
 	 * @param teacherId O ID do professor que criou os lembretes.
 	 * @return Uma lista de lembretes criados pelo professor especificado, ou uma
 	 *         lista vazia caso o professor não seja encontrado.
 	 */
-	public List<Reminder> buscarLembretePorCreatedBy(Long teacherId) {
-		Teacher teacher = teacherRepo.findById(teacherId).orElse(null);
-		if (teacher == null) {
-			return List.of(); // Retorna lista vazia se não encontrar
-		}
-		return reminderRepo.findByCreatedBy(teacher);
+	public List<Reminder> buscarLembretePorCreatedByOuInstitutions(Long teacherId) {
+	    // Busca o professor pelo ID
+	    Teacher teacher = teacherRepo.findById(teacherId).orElse(null);
+
+	    // Lista final para juntar resultados
+	    List<Reminder> allReminders = new ArrayList<>();
+
+	    // Se o professor existir, busca lembretes criados por ele
+	    if (teacher != null) {
+	        List<Reminder> remindersByTeacher = reminderRepo.findByCreatedBy(teacher);
+	        allReminders.addAll(remindersByTeacher);
+	    }
+
+	    // Busca todos os lembretes criados por qualquer instituição (independente de ID)
+	    List<Reminder> remindersByInstitution = reminderRepo.findByCreatedByInstitutionIsNotNull();
+	    allReminders.addAll(remindersByInstitution);
+
+	    return allReminders;
 	}
+
 }
