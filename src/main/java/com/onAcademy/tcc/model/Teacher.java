@@ -57,7 +57,7 @@ public class Teacher {
     public static final String ENROLLMENT_PREFIX = "p";
     private static final int IDENTIFIER_CODE_LENGTH = 10;
 
-    @OneToMany(mappedBy = "recipientTeacher")
+    @OneToMany(mappedBy = "recipientTeacher", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<FeedBackByStudent> feedback;
 
     @ManyToMany
@@ -71,10 +71,10 @@ public class Teacher {
     @ManyToMany(mappedBy = "classes")
     private List<ClassSt> teachers;
 
-    @OneToMany(mappedBy = "createdBy")
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<FeedbackByTeacher> feedbackProfessor;
 
-    @OneToMany(mappedBy = "createdBy")
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<FeedbackForm> feedbackForm;
 
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, orphanRemoval = true)

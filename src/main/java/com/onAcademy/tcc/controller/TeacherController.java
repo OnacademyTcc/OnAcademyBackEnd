@@ -41,7 +41,6 @@ public class TeacherController {
 			List<DisciplineDTO> disciplines) {
 	}
 
-
 	record TeacherDTOGet(Long id, String nomeDocente, String dataNascimentoDocente, String emailDocente,
 			String telefoneDocente, String imageUrl) {
 	}
@@ -99,6 +98,7 @@ public class TeacherController {
 					.body(Map.of("error", "Erro ao criar professor: " + e.getMessage()));
 		}
 	}
+
 	/**
 	 * Valida os campos do DTO do professor.
 	 * 
@@ -131,12 +131,9 @@ public class TeacherController {
 		if (!teacher.getEmailDocente().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
 			throw new IllegalArgumentException("O email fornecido não tem formato válido.");
 		}
-		
+
 		if (!teacher.getTelefoneDocente().matches("\\d{11}")) {
 			throw new IllegalArgumentException("Telefone deve conter exatamente 11 dígitos numéricos.");
-		}
-		if (teacherRepo.existsByTelefoneDocente(teacher.getTelefoneDocente())) {
-			throw new IllegalArgumentException("Telefone já cadastrado.");
 		}
 
 	}
