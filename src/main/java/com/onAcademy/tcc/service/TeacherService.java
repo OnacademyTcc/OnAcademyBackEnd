@@ -268,10 +268,6 @@ public class TeacherService {
         if (existingTeacher.isPresent()) {
             Teacher teacher = existingTeacher.get();
             teacher.setDisciplines(Collections.emptyList()); // Remover as disciplinas associadas
-            teacher.setFeedback(Collections.emptyList()); // Remover os feedbacks recebidos
-            teacher.setFeedbackProfessor(Collections.emptyList()); // Remover os feedbacks enviados
-            teacher.setFeedbackForm(Collections.emptyList()); // Remover os formulários de feedback
-
             for (ClassSt turma : teacher.getTeachers()) {
                 turma.getClasses().remove(teacher); // Remove o professor da turma
             }
