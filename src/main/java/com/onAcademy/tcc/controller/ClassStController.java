@@ -305,7 +305,9 @@ public class ClassStController {
 				return ResponseEntity.ok(classDTO);
 			}
 			return new ResponseEntity<>(Map.of("error", "Classe não encontrada"), HttpStatus.NOT_FOUND);
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 			return new ResponseEntity<>(Map.of("error", "Erro ao buscar alunos da classe: " + e.getMessage()),
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -399,12 +401,24 @@ public class ClassStController {
 	 * @param id ID da turma a ser deletada.
 	 * @return Resposta indicando sucesso ou erro.
 	 */
-	@DeleteMapping("/class/{id}")
+
 	@Transactional
+	@DeleteMapping("/class/{id}")
 	public ResponseEntity<?> deletarClasse(@PathVariable Long id) {
 		try {
-			classStService.deletarClasse(id);
-			return ResponseEntity.noContent().build(); // Retorna 204 No Content
+			// Verifica se a classe existe
+			ClassSt classe = classStService.buscarClasseUnica(id);
+			if (classe == null) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Classe não encontrada"));
+			}
+
+			// Executa a deleção
+			ClassSt deletado = classStService.deletarClasse(id);
+
+			// Retorna resposta de sucesso
+			return ResponseEntity.ok(Map.of("message", "Classe deletada com sucesso", "deleted_id", deletado.getId(),
+					"nome_turma", deletado.getNomeTurma()));
+
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(Map.of("error", "Erro ao deletar classe: " + e.getMessage()));
