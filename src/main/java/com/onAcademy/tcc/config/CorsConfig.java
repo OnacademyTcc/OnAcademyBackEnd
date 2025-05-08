@@ -13,15 +13,13 @@ public class CorsConfig {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**") // Aplica CORS a todos os endpoints
-						.allowedOrigins("http://localhost:3000") // Permite requisições do frontend React/Next.js
-						.allowedOrigins("https://conexao-tcc2.vercel.app")
-						.allowedOrigins("https://www.onacademy.com.br")
-						.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Métodos HTTP permitidos
-						.allowedHeaders("*")// Permite qualquer cabeçalho
-						// Para busca de imagens também autenticado
-						.allowCredentials(true); // Permite envio de cookies e autenticação
+				registry.addMapping("/**")
+						.allowedOriginPatterns("http://localhost:3000", "https://conexao-tcc2.vercel.app",
+								"https://www.onacademy.com.br")
+						.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS").allowedHeaders("*")
+						.allowCredentials(true);
 			}
 		};
 	}
+
 }
