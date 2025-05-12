@@ -224,7 +224,7 @@ public class TeacherService {
             atualizarTeacher.setDataNascimentoDocente(teacher.getDataNascimentoDocente());
             atualizarTeacher.setEmailDocente(teacher.getEmailDocente());
             atualizarTeacher.setTelefoneDocente(teacher.getTelefoneDocente());
-
+            atualizarTeacher.setImageUrl(teacher.getImageUrl());
             String rawPassword = generateRandomPasswordWithName(6, atualizarTeacher.getNomeDocente());
             String encodedPassword = passwordEncoder.encode(rawPassword);
             atualizarTeacher.setPassword(encodedPassword);
