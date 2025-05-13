@@ -85,6 +85,40 @@ public class StudentController {
 					.body(Map.of("error", "Erro ao criar estudante: " + e.getMessage()));
 		}
 	}
+	
+	/**
+	 * Cria múltiplos estudantes de uma vez.
+	 *
+	 * @param studentsDTO Lista de DTOs contendo os dados dos estudantes.
+	 * @return ResponseEntity com a lista de estudantes criados ou mensagem de erro.
+	 */
+	@PreAuthorize("hasRole('INSTITUTION')")
+	@PostMapping("/students/list")
+	public ResponseEntity<?> criarMultiplosEstudantes(@RequestBody List<StudentClassDTO> studentsDTO) {
+	    try {
+	        if (studentsDTO == null || studentsDTO.isEmpty()) {
+	            return ResponseEntity.badRequest()
+	                    .body(Map.of("error", "Lista de estudantes não pode ser vazia"));
+	        }
+
+	        List<Student> estudantesCriados = studentService.criarMultiplosEstudantes(studentsDTO);
+	        
+	        return ResponseEntity.status(HttpStatus.CREATED).body(
+	            Map.of(
+	                "success", true,
+	                "createdCount", estudantesCriados.size(),
+	                "students", estudantesCriados
+	            )
+	        );
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                .body(Map.of(
+	                    "success", false,
+	                    "error", "Erro ao criar estudantes em lote",
+	                    "details", e.getMessage()
+	                ));
+	    }
+	}
 
 	/**
 	 * Retorna uma lista de todos os estudantes.

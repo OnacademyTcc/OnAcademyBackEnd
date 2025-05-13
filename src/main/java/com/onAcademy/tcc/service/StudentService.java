@@ -1,8 +1,10 @@
 package com.onAcademy.tcc.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -156,6 +158,32 @@ public class StudentService {
 		emailService.sendEmail(savedStudent.getEmailAluno(), emailSubject, emailText);
 
 		return savedStudent;
+	}
+	@Transactional
+	public List<Student> criarMultiplosEstudantes(List<StudentClassDTO> studentsDTO) {
+	    List<Student> estudantesCriados = new ArrayList<>();
+	    List<String> erros = new ArrayList<>();
+
+	    for (StudentClassDTO dto : studentsDTO) {
+	        try {
+	            // Validação básica antes de tentar criar
+	            if (dto.getNomeAluno() == null || dto.getNomeAluno().isEmpty()) {
+	                erros.add("Estudante sem nome: " + dto);
+	                continue;
+	            }
+
+	            Student estudante = criarEstudante(dto);
+	            estudantesCriados.add(estudante);
+	        } catch (Exception e) {
+	            erros.add("Erro ao criar estudante " + dto.getNomeAluno() + ": " + e.getMessage());
+	        }
+	    }
+
+	    if (!erros.isEmpty()) {
+	        throw new RuntimeException("Erros ao criar estudantes: " + String.join("; ", erros));
+	    }
+
+	    return estudantesCriados;
 	}
 
 	// Validação de dados do estudante
