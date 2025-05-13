@@ -220,11 +220,23 @@ public class TeacherService {
         Optional<Teacher> existingTeacher = teacherRepo.findById(id);
         if (existingTeacher.isPresent()) {
             Teacher atualizarTeacher = existingTeacher.get();
+            
+         // Verifica se há uma imagem em Base64 no DTO
+            String imageUrl = null;
+            if (teacher.getImageUrl() != null && !teacher.getImageUrl().isEmpty()) {
+                imageUrl = imageUploaderService.uploadBase64Image(teacher.getImageUrl());
+            }
             atualizarTeacher.setNomeDocente(teacher.getNomeDocente());
             atualizarTeacher.setDataNascimentoDocente(teacher.getDataNascimentoDocente());
             atualizarTeacher.setEmailDocente(teacher.getEmailDocente());
             atualizarTeacher.setTelefoneDocente(teacher.getTelefoneDocente());
-            atualizarTeacher.setImageUrl(teacher.getImageUrl());
+            
+            if (imageUrl != null) {
+                atualizarTeacher.setImageUrl(imageUrl);
+            }
+
+            
+         
             String rawPassword = generateRandomPasswordWithName(6, atualizarTeacher.getNomeDocente());
             String encodedPassword = passwordEncoder.encode(rawPassword);
             atualizarTeacher.setPassword(encodedPassword);
