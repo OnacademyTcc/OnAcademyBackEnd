@@ -233,12 +233,20 @@ public class StudentService {
 	        // Validate the updated student data
 	        validarAtualizacaoStudent(student, existStudent.getId());
 
+	        // Verifica se há uma imagem em Base64 no DTO
+            String imageUrl = null;
+            if (student.getImageUrl() != null && !student.getImageUrl().isEmpty()) {
+                imageUrl = imageUploaderService.uploadBase64Image(student.getImageUrl());
+            }
 	        existStudent.setNomeAluno(student.getNomeAluno());
 	        existStudent.setEmailAluno(student.getEmailAluno());
 	        existStudent.setDataNascimentoAluno(student.getDataNascimentoAluno());
 	        existStudent.setTelefoneAluno(student.getTelefoneAluno());
-	        existStudent.setImageUrl(student.getImageUrl());
-
+	        
+	        if (imageUrl != null) {
+	        	existStudent.setImageUrl(imageUrl);
+            }
+	       
 	        String rawPassword = generateRandomPasswordWithName(6, existStudent.getNomeAluno());
 	        String encodedPassword = passwordEncoder.encode(rawPassword);
 	        existStudent.setPassword(encodedPassword);
