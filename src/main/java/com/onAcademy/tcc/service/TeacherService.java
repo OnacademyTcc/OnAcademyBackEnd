@@ -223,7 +223,9 @@ public class TeacherService {
             
          // Verifica se há uma imagem em Base64 no DTO
             String imageUrl = null;
-            if (teacher.getImageUrl() != null && !teacher.getImageUrl().isEmpty()) {
+            if(teacher.getImageUrl() != null && !teacher.getImageUrl().isEmpty() && teacher.getImageUrl().matches("^http://.*")) {
+            	imageUrl = teacher.getImageUrl();
+            }else if (teacher.getImageUrl() != null && !teacher.getImageUrl().isEmpty()) {
                 imageUrl = imageUploaderService.uploadBase64Image(teacher.getImageUrl());
             }
             atualizarTeacher.setNomeDocente(teacher.getNomeDocente());
