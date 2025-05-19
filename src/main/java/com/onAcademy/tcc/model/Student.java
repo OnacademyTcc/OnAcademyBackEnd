@@ -82,21 +82,21 @@ public class Student {
 	private static final String ENROLLMENT_PREFIX = "a";
 	private static final int IDENTIFIER_CODE_LENGTH = 10;
 	
-	@OneToMany(mappedBy = "recipientStudent", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "recipientStudent",fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<FeedbackByTeacher> feedback;
 
-	@OneToMany(mappedBy = "studentId", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "studentId",fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference
 	private List<Note> notas;
 
-	@OneToMany(mappedBy = "createdBy", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "createdBy", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<FeedBackByStudent> feedbackAluno;
 
-	  @ManyToOne
-	    @JoinColumn(name = "turmaId", insertable = false, updatable = false)
-	    private ClassSt classSt;
+	@ManyToOne
+	@JoinColumn(name = "turmaId", insertable = false, updatable = false)
+	private ClassSt classSt;
 
-	@OneToMany(mappedBy = "recipientStudent", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "recipientStudent", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<FeedbackForm> feedbackForm;
 
 	public static String generateRandomPassword(StudentClassDTO studentDTO, ClassSt classSt) {
