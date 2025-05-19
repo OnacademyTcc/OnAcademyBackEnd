@@ -262,8 +262,10 @@ public class StudentService {
 	        validarAtualizacaoStudent(student, existStudent.getId());
 
 	        // Verifica se há uma imagem em Base64 no DTO
-            String imageUrl = null;
-            if (student.getImageUrl() != null && !student.getImageUrl().isEmpty()) {
+	        String imageUrl = null;
+            if(student.getImageUrl() != null && !student.getImageUrl().isEmpty() && student.getImageUrl().matches("^http://.*")) {
+            	imageUrl = student.getImageUrl();
+            }else if (student.getImageUrl() != null && !student.getImageUrl().isEmpty()) {
                 imageUrl = imageUploaderService.uploadBase64Image(student.getImageUrl());
             }
 	        existStudent.setNomeAluno(student.getNomeAluno());
