@@ -89,6 +89,22 @@ public class InstitutionController {
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	/**
+	 * Endpoint para buscar uma instituição específica.
+	 * 
+	 * @param id O ID da instituição a ser buscada.
+	 * @return Informações detalhadas sobre a instituição.
+	 */
+	@GetMapping("/institution/{id}")
+	public ResponseEntity<?>buscarInstitutionUnica(@PathVariable Long id){
+		Institution institution = institutionService.buscarInstituicaoUnica(id);
+		if(institution == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Instituição não encontrada"));
+		}else {
+			return ResponseEntity.ok(institution);
+		}
+	}
 
 	/**
 	 * Atualiza as informações de uma instituição existente.

@@ -87,6 +87,17 @@ public class InstitutionService {
 		List<Institution> institution = institutionRepo.findAll();
 		return institution;
 	}
+	
+	/**
+     * Busca uma instituição específica pelo ID.
+     * 
+     * @param id O ID da institution.
+     * @return A institution encontrada, ou `null` caso não exista.
+     */
+	public Institution buscarInstituicaoUnica(Long id) {
+		Optional<Institution> existingInstitution = institutionRepo.findById(id);
+		return existingInstitution.orElse(null);
+	}
 
 	/**
 	 * Atualiza os dados de uma instituição existente no banco de dados.
