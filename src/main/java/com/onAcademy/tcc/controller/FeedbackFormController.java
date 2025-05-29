@@ -1,9 +1,9 @@
 package com.onAcademy.tcc.controller;
- 
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
- 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,49 +13,49 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
- 
+
 import com.onAcademy.tcc.model.FeedbackForm;
 import com.onAcademy.tcc.model.Student;
 import com.onAcademy.tcc.repository.FeedbackFormRepo;
 import com.onAcademy.tcc.repository.StudentRepo;
 import com.onAcademy.tcc.service.FeedbackFormService;
- 
+
 import io.swagger.v3.oas.annotations.tags.Tag;
- 
+
 @Tag(name = "FeedbackForm", description = "EndPoint do formulário feedback")
 @RestController
 @RequestMapping("/api")
 public class FeedbackFormController {
 	@Autowired
 	private FeedbackFormService feedbackFormService;
- 
+
 	@Autowired
 	FeedbackFormRepo feedbackFormRepo;
- 
+
 	@Autowired
 	StudentRepo studentRepo;
- 
+
 	record StudentDTO(String nomeAluno, Long id) {
 	}
- 
+
 	record StudentDTOTurma(String nomeAluno, Long id, Long turmaId) {
 	}
- 
+
 	record CreatedByDTO(String nomeDocente, Long id) {
 	}
- 
+
 	record FeedbackDTO(int resposta1, int resposta2, int resposta3, int resposta4, int resposta5, int bimestre,
 			CreatedByDTO createdByDTO, StudentDTO student) {
 	}
- 
+
 	record FeedbackDTOTurma(int resposta1, int resposta2, int resposta3, int resposta4, int resposta5,
 			CreatedByDTO createdByDTO, StudentDTOTurma student) {
 	}
- 
+
 	record FeedbackMediasDTO(double mediaResposta1, double mediaResposta2, double mediaResposta3, double mediaResposta4,
 			double mediaResposta5, int totalFeedbacks) {
 	}
- 
+
 	/**
 	 * Cria um feedback de um docente para um aluno.
 	 *
@@ -70,10 +70,10 @@ public class FeedbackFormController {
 	 */
 	@PostMapping("/feedbackForm")
 	public ResponseEntity<?> criarFeedback(@RequestBody FeedbackForm feedbackByStudent) {
- 
+
 		try {
 			validarFeedback(feedbackByStudent);
- 
+
 			FeedbackForm feedback1 = feedbackFormService.criarFeedbackStudent(feedbackByStudent);
 			return ResponseEntity.status(HttpStatus.CREATED).body(feedback1);
 		} catch (IllegalArgumentException e) {
@@ -82,9 +82,9 @@ public class FeedbackFormController {
 			return ResponseEntity.internalServerError()
 					.body(Map.of("error", "Erro ao criar professor: " + e.getMessage()));
 		}
- 
+
 	}
- 
+
 	/**
 	 * Valida o conteúdo de um feedback.
 	 *
@@ -104,20 +104,20 @@ public class FeedbackFormController {
 		if (feedbackByStudent.getRecipientStudent() == null) {
 			new IllegalArgumentException("Precisa indicar para qual aluno é este feedback.");
 		}
- 
+
 		if (feedbackByStudent.getBimestre() > 4 || feedbackByStudent.getBimestre() < 1) {
 			throw new IllegalArgumentException("Bimestre inválido. Deve estar entre 1 e 4.");
 		}
 		boolean feedbackExists = feedbackFormRepo.existsByCreatedByAndRecipientStudentAndBimestre(
 				feedbackByStudent.getCreatedBy(), feedbackByStudent.getRecipientStudent(),
 				feedbackByStudent.getBimestre());
- 
+
 		if (feedbackExists) {
 			throw new RuntimeException("Já existe um feedback para este aluno nesse bimestre.");
 		}
- 
+
 	}
- 
+
 	/**
 	 * Busca os feedbacks fornecidos a um aluno específico.
 	 *
@@ -144,12 +144,22 @@ public class FeedbackFormController {
 		}
 		return null;
 	}
- 
-	// Todos
+
+	/**
+	 * Endpoint para listar todos os feedbacks associados a uma turma específica.
+	 * 
+	 * - Recebe o ID de uma turma como parâmetro na URL - Retorna uma lista de
+	 * feedbacks formatados como DTOs (Data Transfer Objects) - Inclui informações
+	 * completas: respostas, docente criador e aluno destinatário - Sempre retorna
+	 * status HTTP 200 (OK), mesmo com lista vazia
+	 * 
+	 * @param turmaId ID da turma para filtrar os feedbacks (obrigatório)
+	 * @return ResponseEntity contendo lista de FeedbackDTOTurma e status HTTP 200
+	 */
 	@GetMapping("/class/feedbacks/{turmaId}")
 	public ResponseEntity<List<FeedbackDTOTurma>> listarFeedbacksPorTurma(@PathVariable Long turmaId) {
 		List<FeedbackForm> feedbacks = feedbackFormService.buscarFeedbacksComRespostasPorTurma(turmaId);
- 
+
 		List<FeedbackDTOTurma> feedbackDtos = feedbacks.stream()
 				.map(feedback -> new FeedbackDTOTurma(feedback.getResposta1(), feedback.getResposta2(),
 						feedback.getResposta3(), feedback.getResposta4(), feedback.getResposta5(),
@@ -157,25 +167,37 @@ public class FeedbackFormController {
 						new StudentDTOTurma(feedback.getRecipientStudent().getNomeAluno(),
 								feedback.getRecipientStudent().getId(), feedback.getRecipientStudent().getTurmaId())))
 				.toList();
- 
+
 		return new ResponseEntity<>(feedbackDtos, HttpStatus.OK);
 	}
- 
-	// MÉDIA
+
+	/**
+	 * Endpoint para obter as médias das avaliações de feedback de uma turma
+	 * específica.
+	 * 
+	 * - Recebe o ID de uma turma como parâmetro na URL - Calcula as médias das 5
+	 * respostas de feedback - Retorna um DTO contendo: * As médias de cada uma das
+	 * 5 questões * O total de feedbacks considerados no cálculo - Trata casos onde
+	 * a turma não é encontrada (404 Not Found)
+	 * 
+	 * @param turmaId ID da turma para cálculo das médias (não pode ser nulo)
+	 * @return ResponseEntity contendo: - FeedbackMediasDTO com as médias (status
+	 *         200) em caso de sucesso - Mensagem de erro (status 404) se a turma
+	 *         não for encontrada
+	 */
 	@GetMapping("/class/feedback/{turmaId}")
 	public ResponseEntity<?> obterMediasFeedbacks(@PathVariable Long turmaId) {
 		try {
 			List<Double> medias = feedbackFormService.calcularMediasFeedbacksPorTurma(turmaId);
 			List<FeedbackForm> feedbacks = feedbackFormService.buscarFeedbacksComRespostasPorTurma(turmaId);
- 
+
 			FeedbackMediasDTO response = new FeedbackMediasDTO(medias.get(0), medias.get(1), medias.get(2),
 					medias.get(3), medias.get(4), feedbacks.size());
- 
+
 			return ResponseEntity.ok(response);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
 		}
 	}
- 
+
 }
- 
