@@ -1,7 +1,9 @@
 ## OnAcademy: Revolucionando o Ensino 📚💡
 [![licence mit](https://img.shields.io/badge/licence-MIT-blue.svg)](./LICENSE)
 
-O aplicativo tem como objetivo aprimorar a experiência educacional, oferecendo ferramentas para acompanhar o desempenho dos alunos por meio de gráficos interativos e análise de porcentagens de notas. 
+O aplicativo tem como objetivo aprimorar a experiência educacional, oferecendo ferramentas para acompanhar o desempenho dos alunos por meio de gráficos interativos e análise de porcentagens de notas.
+
+![Banner marketing site estratégia digital roxo branco azul](https://github.com/user-attachments/assets/5e79ea97-9179-480c-82e9-ee10359fbde3)
 
 ## Motivação
 A OnAcademy surgiu da necessidade de transformar a maneira como acompanhamos e gerenciamos o desempenho acadêmico. Percebemos que, embora o conceito de avaliação de conduta já exista, ele muitas vezes fica engessado em sistemas ultrapassados, sem transparência ou interação real com alunos e professores.
