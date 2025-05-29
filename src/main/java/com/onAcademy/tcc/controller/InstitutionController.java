@@ -89,7 +89,7 @@ public class InstitutionController {
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
+	
 	/**
 	 * Endpoint para buscar uma instituição específica.
 	 * 
@@ -97,11 +97,11 @@ public class InstitutionController {
 	 * @return Informações detalhadas sobre a instituição.
 	 */
 	@GetMapping("/institution/{id}")
-	public ResponseEntity<?> buscarInstitutionUnica(@PathVariable Long id) {
+	public ResponseEntity<?>buscarInstitutionUnica(@PathVariable Long id){
 		Institution institution = institutionService.buscarInstituicaoUnica(id);
-		if (institution == null) {
+		if(institution == null) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Instituição não encontrada"));
-		} else {
+		}else {
 			return ResponseEntity.ok(institution);
 		}
 	}

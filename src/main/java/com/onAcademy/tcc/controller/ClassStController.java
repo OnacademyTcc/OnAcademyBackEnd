@@ -57,8 +57,8 @@ public class ClassStController {
 	record NoteDTO(String nomeDisciplina, Double valorNota) {
 	}
 
-	record StudentDTO(String nomeAluno, String dataNascimentoAluno, List<NoteDTO> nota, Long id, String identifierCode,
-			String imageUrl) {
+	record StudentDTO(String nomeAluno, String dataNascimentoAluno, List<NoteDTO> nota, Long id,
+			String identifierCode, String imageUrl) {
 	}
 
 	record TeacherDTO(String nome, Long id) {

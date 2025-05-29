@@ -214,19 +214,6 @@ public class TeacherController {
 		return ResponseEntity.ok(teacherDTOTwoSimples);
 	}
 
-	/**
-	 * Endpoint para buscar um professor específico e suas disciplinas associadas.
-	 * 
-	 * - Recebe o ID de um professor como parâmetro na URL - Retorna um DTO
-	 * contendo: * Informações básicas do professor (nome, email, telefone) * Lista
-	 * de disciplinas que ele ministra - Trata casos onde o professor não é
-	 * encontrado (404 Not Found)
-	 * 
-	 * @param id ID do professor a ser buscado (não pode ser nulo)
-	 * @return ResponseEntity contendo: - TeacherDisciplineDTO com os dados (status
-	 *         200) em caso de sucesso - Mensagem de erro (status 404) se o
-	 *         professor não for encontrado
-	 */
 	@GetMapping("/teacher/discipline/{id}")
 	public ResponseEntity<?> buscarTeacherUnicoDiscipline(@PathVariable Long id) {
 		Teacher teacher = teacherService.buscarUnicoTeacher(id);
