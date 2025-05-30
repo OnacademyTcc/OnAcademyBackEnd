@@ -5,38 +5,82 @@
 ### Como rodar na minha máquina?
 1. Clone o projeto: `https://github.com/OnacademyTcc/OnAcademyBackEnd`
 
-2. Instale as dependências necessárias:
+2. Configure o Run Configurations Enviroments:
 ```
-npm i --force
-npm i dotenv --force
-npm install lucide-react --force
-npm install react-circular-progressbar --force
-npm install -D tailwind-scrollbar --force
-npm install @headlessui/react --force
-npm i react-icons --force
-npm install recharts react-select --force
-npm install @fullcalendar/react @fullcalendar/daygrid @fullcalendar/interaction @fullcalendar/timegrid @headlessui/react @heroicons/react --force
-npm install jsonwebtoken --force
-npm install js-cookie --force
-npm i --save-dev @types/js-cookie --force
-npm install @radix-ui/react-toast --force
-npm install @radix-ui/react-label --force
-npm install @radix-ui/react-dialog --force
-npm install react-toastify --force
-npm install react-loading-skeleton --force
-```
-Ou você pode instalar todas as dependências principais com o comando:
-```
-  npm install --force
+  cloudinary.api_key: 828664138232486
+  cloudinary.api_secret: QlRCJ7Hnvus2jQMpsKi62SrYUwM
+  cloudinary.cloud_name: dnqcwflgu
+  email.onacademy: onacademy.tcc@gmail.com
+  password.onacademy: dtua qogo snlg dxlx
 
 ```
 3. Inicie a aplicação:
-```
-   npm run dev
-```
-
+   
 4. Pronto 🎉
 ## OnAcademy
 ### Estrutura do Projeto
 
-- `.next`: Diretório gerado automaticamente pelo Next.js contendo os arquivos otimizados para produção, cache de construção e configurações internas do framework. É recriado a cada build e não deve ser commitado no versionamento.
+`tcc (in AzureONA) [AzureONA master]`:
+  - `tcc/src`:
+    - `tcc/src/main`:
+      - `tcc/src/main/java`:
+        - `tcc/src/main/java/com.onAcademy.tcc`:
+          - `tcc/src/main/java/com.onAcademy.tcc/TccApplication.java`: Classe principal que inicia a aplicação Spring Boot.
+
+        - `tcc/src/main/java/com.config.copy`:
+          - `tcc/src/main/java/com.config.copy/CloudinaryConfig.java`: Configuração para integração com o serviço Cloudinary (upload de imagens).
+          - `tcc/src/main/java/com.config.copy/CorsConfig.java`: Configurações CORS para permitir requisições entre origens diferentes.
+          - `tcc/src/main/java/com.config.copy/SecurityConfig.java`: Configurações de segurança da aplicação (autenticação, autorização).
+          - `tcc/src/main/java/com.config.copy/SecurityFilter.java`: Filtro para validação de tokens JWT e autenticação.
+          - `tcc/src/main/java/com.config.copy/SwaggerConfig.java`: Configuração do Swagger para documentação da API.
+          - `tcc/src/main/java/com.config.copy/TokenProvider.java`: Geração e validação de tokens JWT.
+
+        - `tcc/src/main/java/com.onAcademy.tcc.controller`:
+          - `BoletimPDFController.java`: Controlador para geração de boletins em PDF.
+          - `ClassStController.java`: CRUD para turmas/classes.
+          - `DisciplineController.java`: CRUD para disciplinas.
+          - `EmailController.java`: Envio de emails.
+          - `EventController.java`: CRUD para eventos.
+          - `FeedbackByStudentController.java`: Feedback dado por alunos.
+          - `FeedbackByTeacherController.java`: Feedback dado por professores.
+          - `FeedbackFormController.java`: CRUD para formulários de feedback.
+          - `ImageUploaderController.java`: Upload de imagens.
+          - `InstitutionController.java`: CRUD para instituições.
+          - `NotesController.java`: CRUD para anotações.
+          - `ReminderController.java`: CRUD para lembretes.
+          - `StudentController.java`: CRUD para alunos.
+          - `TeacherController.java`: CRUD para professores.
+
+        - `tcc/src/main/java/com.onAcademy.tcc.dto`:
+          - `ClassDTO.java`: DTO para turmas.
+          - `FeedbackStudentDTO.java`: DTO para feedback de alunos.
+          - `LoginDTO.java`: DTO para login genérico.
+          - `LoginStudentDTO.java`: DTO para login de aluno.
+          - `LoginTeacherDTO.java`: DTO para login de professor.
+          - `NoteDTO.java`: DTO para anotações.
+          - `StudentClassDTO.java`: DTO para relação aluno-turma.
+          - `TeacherDTO.java`: DTO para professores.
+
+        - `tcc/src/main/java/com.onAcademy.tcc.model`:
+          - `ClassSt.java`: Entidade de turmas.
+          - `Discipline.java`: Entidade de disciplinas.
+          - `EmailRequest.java`: Modelo para requisição de email.
+          - `Event.java`: Entidade de eventos.
+          - `FeedBackByStudent.java`: Entidade de feedback de alunos.
+          - `FeedbackByTeacher.java`: Entidade de feedback de professores.
+          - `FeedbackForm.java`: Entidade de formulários de feedback.
+          - `Institution.java`: Entidade de instituições.
+          - `Note.java`: Entidade de anotações.
+          - `Reminder.java`: Entidade de lembretes.
+          - `Student.java`: Entidade de alunos.
+          - `Teacher.java`: Entidade de professores.
+
+        - `tcc/src/main/java/com.onAcademy.tcc.repositoryl`:
+          - Arquivos de repositório (Repo) para cada entidade, responsáveis por operações de banco de dados.
+
+        - `tcc/src/main/java/com.onAcademy.tcc.service`:
+          - Serviços correspondentes a cada controlador, contendo a lógica de negócio.
+
+
+# Conclusão:
+A estrutura do projeto On Academy foi meticulosamente organizada seguindo as melhores práticas de desenvolvimento em Java.
