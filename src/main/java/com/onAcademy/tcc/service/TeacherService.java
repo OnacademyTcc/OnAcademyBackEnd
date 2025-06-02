@@ -20,6 +20,7 @@ import com.onAcademy.tcc.repository.DisciplineRepo;
 import com.onAcademy.tcc.repository.StudentRepo;
 import com.onAcademy.tcc.repository.TeacherRepo;
 import jakarta.mail.MessagingException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 /**
@@ -278,19 +279,26 @@ public class TeacherService {
      */
     @Transactional
     public Teacher deletarTeacher(Long id) {
-        Optional<Teacher> existingTeacher = teacherRepo.findById(id);
-        if (existingTeacher.isPresent()) {
-            Teacher teacher = existingTeacher.get();
-            teacher.setDisciplines(Collections.emptyList()); // Remover as disciplinas associadas
-            for (ClassSt turma : teacher.getTeachers()) {
-                turma.getClasses().remove(teacher); // Remove o professor da turma
-            }
-            teacher.setTeachers(Collections.emptyList());
-            teacherRepo.delete(teacher);
-            return teacher;
+        Teacher teacher = teacherRepo.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Professor não encontrado com ID: " + id));
+
+        for (ClassSt classSt : teacher.getTeachers()) {
+            classSt.getClasses().remove(teacher);
         }
-        return null;
+        
+        for (Discipline discipline : teacher.getDisciplines()) {
+            discipline.getTeachers().remove(teacher);
+        }
+        
+        teacher.getFeedback().clear();
+        teacher.getFeedbackProfessor().clear();
+        teacher.getFeedbackForm().clear();
+        teacher.getReminder().clear();
+
+        teacherRepo.delete(teacher);
+        return teacher;
     }
+
 
     /**
      * Busca um professor específico pelo ID.
