@@ -131,22 +131,49 @@ public class TeacherService {
         teacher.setDisciplines(disciplines);
         Teacher savedTeacher = teacherRepo.save(teacher);
         
-        String emailSubject = "Bem-vindo ao OnAcademy - Seu cadastro foi realizado com sucesso!";
-        String emailText = "<html>" + "<body style='font-family: Arial, sans-serif; color: #333;'>"
-                + "<div style='max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;'>"
-                + "<h1 style='color: #007BFF;'>Olá, " + savedTeacher.getNomeDocente() + "!</h1>"
-                + "<p style='font-size: 16px;'>Seja muito bem-vindo(a) ao <strong>OnAcademy</strong>! Estamos felizes em tê-lo(a) conosco.</p>"
-                + "<p style='font-size: 16px;'>Seu cadastro foi realizado com sucesso. Abaixo estão suas credenciais de acesso:</p>"
-                + "<div style='background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;'>"
-                + "<p style='font-size: 14px; margin: 5px 0;'><strong>Código de Matrícula:</strong> "
-                + savedTeacher.getIdentifierCode() + "</p>"
-                + "<p style='font-size: 14px; margin: 5px 0;'><strong>Senha:</strong> " + rawPassword + "</p>"
-                + "</div>"
-                + "<p style='font-size: 16px;'>Por favor, mantenha essas informações em local seguro e não as compartilhe com terceiros.</p>"
-                + "<p style='font-size: 16px;'>Se precisar de ajuda ou tiver alguma dúvida, entre em contato conosco.</p>"
-                + "<p style='font-size: 16px;'>Atenciosamente,<br/><strong>Equipe OnAcademy</strong></p>"
-                + "<p style='font-size: 14px; color: #777;'>Este é um e-mail automático, por favor não responda.</p>"
-                + "</div>" + "</body>" + "</html>";
+        String emailSubject = "✨ Bem-vindo(a) à ON Academy - Cadastro Realizado!";
+
+        String emailText = "<!DOCTYPE html>"
+            + "<html xmlns='http://www.w3.org/1999/xhtml'>"
+            + "<head>"
+            + "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>"
+            + "<style>"
+            + "  body { font-family: 'Poppins', sans-serif; background-color: #f8fbff; margin: 0; padding: 20px; color: #333; }"
+            + "  .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 25px; padding: 30px; box-shadow: 0 5px 15px rgba(0, 87, 255, 0.1); }"
+            + "  .logo { font-family: 'Fredoka One', cursive; font-size: 28px; color: #0038a8; text-align: center; margin-bottom: 10px; }"
+            + "  h1 { color: #0057ff; text-align: center; font-size: 24px; margin: 20px 0; }"
+            + "  .info-box { background: linear-gradient(135deg, #e6f2ff, #d0e4ff); padding: 20px; border-radius: 15px; margin: 20px 0; border: 2px dashed #a8d0ff; }"
+            + "  .credentials { background-color: #f5faff; padding: 15px; border-radius: 10px; margin: 15px 0; }"
+            + "  .login-btn { display: inline-block; background: linear-gradient(135deg, #0057ff, #0085ff); color: white; padding: 12px 25px; text-decoration: none; border-radius: 30px; font-weight: bold; margin: 15px 0; }"
+            + "  .footer { margin-top: 30px; color: #6699cc; font-size: 14px; text-align: center; }"
+            + "  .divider { border-top: 2px dashed #a8d0ff; margin: 25px 0; }"
+            + "</style>"
+            + "</head>"
+            + "<body>"
+            + "<div class='container'>"
+            + "  <div class='logo'>ON Academy</div>"
+            + "  <h1>Olá, " + savedTeacher.getNomeDocente() + "! 👋</h1>"
+            + "  <div class='info-box'>"
+            + "    <p style='text-align: center; font-size: 16px; margin-bottom: 10px;'>Seu cadastro foi realizado com sucesso!</p>"
+            + "    <p style='text-align: center; font-size: 16px;'>Estamos muito felizes em tê-lo(a) como parte da nossa comunidade educacional.</p>"
+            + "  </div>"
+            + "  <div class='credentials'>"
+            + "    <p style='font-size: 15px; margin: 10px 0;'><strong>🔑 Código de Matrícula:</strong> " + savedTeacher.getIdentifierCode() + "</p>"
+            + "    <p style='font-size: 15px; margin: 10px 0;'><strong>🔒 Senha temporária:</strong> " + rawPassword + "</p>"
+            + "  </div>"
+            + "  <div style='text-align: center;'>"
+            + "    <a href='https://www.onacademy.com.br/' class='login-btn'>ACESSAR PLATAFORMA</a>"
+            + "  </div>"
+            + "  <div class='divider'></div>"
+            + "  <p style='font-size: 14px;'>Se tiver qualquer dúvida ou precisar de ajuda, entre em contato conosco:</p>"
+            + "  <p style='font-size: 14px;'>📧 onacademy.tcc@gmail.com</p>"
+            + "  <div class='footer'>"
+            + "    <p>Equipe ON Academy</p>"
+            + "    <p style='font-size: 12px; color: #999;'>Este é um e-mail automático, por favor não responda.</p>"
+            + "  </div>"
+            + "</div>"
+            + "</body>"
+            + "</html>";
 
         emailService.sendEmail(savedTeacher.getEmailDocente(), emailSubject, emailText);
 
@@ -196,6 +223,7 @@ public class TeacherService {
             throw new IllegalArgumentException("Por favor preencha com no mínimo uma disciplina.");
         }
     }
+    
 
     /**
      * Busca todos os professores cadastrados no sistema.
@@ -239,27 +267,56 @@ public class TeacherService {
             }
 
             
-         
             String rawPassword = generateRandomPasswordWithName(6, atualizarTeacher.getNomeDocente());
             String encodedPassword = passwordEncoder.encode(rawPassword);
             atualizarTeacher.setPassword(encodedPassword);
             teacherRepo.save(atualizarTeacher);
 
-            String emailSubject = "Atualização dos seus dados de acesso - Confira as novas informações!";
-            String emailText = "<html>" + "<body style='font-family: Arial, sans-serif; color: #333;'>"
-                    + "<div style='max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;'>"
-                    + "<h1 style='color: #007BFF;'>Olá, " + atualizarTeacher.getNomeDocente() + "!</h1>"
-                    + "<p style='font-size: 16px;'>Seus dados de acesso foram atualizados com sucesso. Abaixo estão suas novas credenciais:</p>"
-                    + "<div style='background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;'>"
-                    + "<p style='font-size: 14px; margin: 5px 0;'><strong>Código de Matrícula:</strong> " 
-                    + atualizarTeacher.getIdentifierCode() + "</p>"
-                    + "<p style='font-size: 14px; margin: 5px 0;'><strong>Nova Senha:</strong> " + rawPassword + "</p>"
-                    + "</div>"
-                    + "<p style='font-size: 16px;'>Por favor, mantenha essas informações em local seguro e não as compartilhe com terceiros.</p>"
-                    + "<p style='font-size: 16px;'>Se você não solicitou essa alteração ou tem alguma dúvida, entre em contato conosco imediatamente.</p>"
-                    + "<p style='font-size: 16px;'>Atenciosamente,<br/><strong>Equipe OnAcademy</strong></p>"
-                    + "<p style='font-size: 14px; color: #777;'>Este é um e-mail automático, por favor não responda.</p>"
-                    + "</div>" + "</body>" + "</html>";
+            String emailSubject = "🔒 Atualização Confirmada - Seus Dados Foram Atualizados | ON Academy";
+
+            String emailText = "<!DOCTYPE html>"
+                + "<html xmlns='http://www.w3.org/1999/xhtml'>"
+                + "<head>"
+                + "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>"
+                + "<style>"
+                + "  body { font-family: 'Poppins', sans-serif; background-color: #f8fbff; margin: 0; padding: 20px; color: #333; }"
+                + "  .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 25px; padding: 30px; box-shadow: 0 5px 15px rgba(0, 87, 255, 0.1); }"
+                + "  .logo { font-family: 'Fredoka One', cursive; font-size: 28px; color: #0038a8; text-align: center; margin-bottom: 10px; }"
+                + "  h1 { color: #0057ff; text-align: center; font-size: 24px; margin: 20px 0; }"
+                + "  .alert-box { background: #fff8e6; padding: 20px; border-radius: 15px; margin: 20px 0; border-left: 5px solid #ffc107; }"
+                + "  .credentials { background: linear-gradient(135deg, #e6f2ff, #d0e4ff); padding: 20px; border-radius: 15px; margin: 20px 0; border: 2px dashed #a8d0ff; }"
+                + "  .login-btn { display: inline-block; background: linear-gradient(135deg, #0057ff, #0085ff); color: white; padding: 12px 25px; text-decoration: none; border-radius: 30px; font-weight: bold; margin: 15px 0; }"
+                + "  .footer { margin-top: 30px; color: #6699cc; font-size: 14px; text-align: center; }"
+                + "  .divider { border-top: 2px dashed #a8d0ff; margin: 25px 0; }"
+                + "  .warning { color: #d32f2f; font-weight: bold; }"
+                + "</style>"
+                + "</head>"
+                + "<body>"
+                + "<div class='container'>"
+                + "  <div class='logo'>ON Academy</div>"
+                + "  <h1>Olá, " + atualizarTeacher.getNomeDocente() + "!</h1>"
+                + "  <div class='alert-box'>"
+                + "    <p style='text-align: center; font-size: 16px;'><span class='warning'>⚠️ ATENÇÃO:</span> Seus dados de acesso foram atualizados.</p>"
+                + "  </div>"
+                + "  <div class='credentials'>"
+                + "    <p style='text-align: center; font-size: 16px; margin-bottom: 15px;'>Confira suas novas credenciais:</p>"
+                + "    <p style='font-size: 15px; margin: 12px 0;'><strong>🔑 Código de Matrícula:</strong> " + atualizarTeacher.getIdentifierCode() + "</p>"
+                + "    <p style='font-size: 15px; margin: 12px 0;'><strong>🔒 Nova Senha:</strong> " + rawPassword + "</p>"
+                + "  </div>"
+                + "  <div style='text-align: center;'>"
+                + "    <a href='https://suaurl.onacademy.com.br/login' class='login-btn'>ACESSAR MINHA CONTA</a>"
+                + "  </div>"
+                + "  <p style='font-size: 15px; text-align: center;'>Por favor, altere sua senha no primeiro acesso.</p>"
+                + "  <div class='divider'></div>"
+                + "  <p style='font-size: 15px;'><span class='warning'>Importante:</span> Caso não tenha solicitado esta alteração, entre em contato imediatamente com nosso suporte.</p>"
+                + "  <p style='font-size: 14px;'>📧 suporte@onacademy.com.br<br>📞 (XX) XXXX-XXXX</p>"
+                + "  <div class='footer'>"
+                + "    <p>Atenciosamente,<br><strong>Equipe ON Academy</strong></p>"
+                + "    <p style='font-size: 12px; color: #999;'>Este é um e-mail automático, por favor não responda.</p>"
+                + "  </div>"
+                + "</div>"
+                + "</body>"
+                + "</html>";
             try {
                 emailService.sendEmail(atualizarTeacher.getEmailDocente(), emailSubject, emailText);
             } catch (MessagingException e) {
