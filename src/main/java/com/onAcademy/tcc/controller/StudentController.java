@@ -32,8 +32,9 @@ public class StudentController {
 	/**
 	 * DTO para representar uma turma de forma simplificada.
 	 */
-	record DisciplinaDTO(Long id, String nomeDisciplina) {}
-	
+	record DisciplinaDTO(Long id, String nomeDisciplina) {
+	}
+
 	record ClassDTO(String nomeTurma, Long idTurma, List<DisciplinaDTO> disciplinaTurmas) {
 	}
 
@@ -85,7 +86,7 @@ public class StudentController {
 					.body(Map.of("error", "Erro ao criar estudante: " + e.getMessage()));
 		}
 	}
-	
+
 	/**
 	 * Cria múltiplos estudantes de uma vez.
 	 *
@@ -95,29 +96,19 @@ public class StudentController {
 	@PreAuthorize("hasRole('INSTITUTION')")
 	@PostMapping("/students/list")
 	public ResponseEntity<?> criarMultiplosEstudantes(@RequestBody List<StudentClassDTO> studentsDTO) {
-	    try {
-	        if (studentsDTO == null || studentsDTO.isEmpty()) {
-	            return ResponseEntity.badRequest()
-	                    .body(Map.of("error", "Lista de estudantes não pode ser vazia"));
-	        }
+		try {
+			if (studentsDTO == null || studentsDTO.isEmpty()) {
+				return ResponseEntity.badRequest().body(Map.of("error", "Lista de estudantes não pode ser vazia"));
+			}
 
-	        List<Student> estudantesCriados = studentService.criarMultiplosEstudantes(studentsDTO);
-	        
-	        return ResponseEntity.status(HttpStatus.CREATED).body(
-	            Map.of(
-	                "success", true,
-	                "createdCount", estudantesCriados.size(),
-	                "students", estudantesCriados
-	            )
-	        );
-	    } catch (Exception e) {
-	        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-	                .body(Map.of(
-	                    "success", false,
-	                    "error", "Erro ao criar estudantes em lote",
-	                    "details", e.getMessage()
-	                ));
-	    }
+			List<Student> estudantesCriados = studentService.criarMultiplosEstudantes(studentsDTO);
+
+			return ResponseEntity.status(HttpStatus.CREATED).body(
+					Map.of("success", true, "createdCount", estudantesCriados.size(), "students", estudantesCriados));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+					Map.of("success", false, "error", "Erro ao criar estudantes em lote", "details", e.getMessage()));
+		}
 	}
 
 	/**
@@ -157,16 +148,11 @@ public class StudentController {
 
 			ClassDTO turma = null;
 			if (estudante.getClassSt() != null) {
-			    List<DisciplinaDTO> disciplinasDTO = estudante.getClassSt().getDisciplinaTurmas()
-			        .stream()
-			        .map(d -> new DisciplinaDTO(d.getId(), d.getNomeDisciplina()))
-			        .collect(Collectors.toList());
+				List<DisciplinaDTO> disciplinasDTO = estudante.getClassSt().getDisciplinaTurmas().stream()
+						.map(d -> new DisciplinaDTO(d.getId(), d.getNomeDisciplina())).collect(Collectors.toList());
 
-			    turma = new ClassDTO(
-			        estudante.getClassSt().getNomeTurma(),
-			        estudante.getClassSt().getId(),
-			        disciplinasDTO
-			    );
+				turma = new ClassDTO(estudante.getClassSt().getNomeTurma(), estudante.getClassSt().getId(),
+						disciplinasDTO);
 			}
 
 			StudentDTO studentDTO = new StudentDTO(estudante.getNomeAluno(),
