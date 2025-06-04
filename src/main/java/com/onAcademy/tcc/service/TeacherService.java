@@ -223,6 +223,7 @@ public class TeacherService {
             throw new IllegalArgumentException("Por favor preencha com no mínimo uma disciplina.");
         }
     }
+    
 
     /**
      * Busca todos os professores cadastrados no sistema.
@@ -266,7 +267,6 @@ public class TeacherService {
             }
 
             
-         
             String rawPassword = generateRandomPasswordWithName(6, atualizarTeacher.getNomeDocente());
             String encodedPassword = passwordEncoder.encode(rawPassword);
             atualizarTeacher.setPassword(encodedPassword);
