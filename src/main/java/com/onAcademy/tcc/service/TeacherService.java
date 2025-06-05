@@ -16,6 +16,7 @@ import com.onAcademy.tcc.dto.TeacherDTO;
 import com.onAcademy.tcc.model.ClassSt;
 import com.onAcademy.tcc.model.Discipline;
 import com.onAcademy.tcc.model.Teacher;
+import com.onAcademy.tcc.repository.ClassStRepo;
 import com.onAcademy.tcc.repository.DisciplineRepo;
 import com.onAcademy.tcc.repository.FeedbackByStudentRepo;
 import com.onAcademy.tcc.repository.FeedbackByTeacherRepo;
@@ -72,6 +73,9 @@ public class TeacherService {
 
     @Autowired
     private ReminderRepo reminderRepo;
+    
+    @Autowired
+    private ClassStRepo classStRepo;
     
     @Autowired
     private ImageUploaderService imageUploaderService;
@@ -361,6 +365,8 @@ public class TeacherService {
         feedbackByTeacherRepo.deleteByCreatedById(id);
         feedbackFormRepo.deleteByCreatedById(id);
         reminderRepo.deleteByCreatedById(id);
+        
+        classStRepo.deleteJoinWithTeacher(id);
 
         // (b) Tabela de junção entre Teacher e Discipline
         disciplineRepo.deleteJoinWithTeacher(id);

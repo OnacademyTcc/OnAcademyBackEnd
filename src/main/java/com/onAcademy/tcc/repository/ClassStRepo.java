@@ -1,6 +1,10 @@
 package com.onAcademy.tcc.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 import com.onAcademy.tcc.model.ClassSt;
 
 /**
@@ -13,4 +17,8 @@ import com.onAcademy.tcc.model.ClassSt;
  */
 public interface ClassStRepo extends JpaRepository<ClassSt, Long> {
     // Métodos personalizados podem ser adicionados aqui, se necessário.
+	
+	@Modifying
+    @Query(value = "DELETE FROM classst_teacher WHERE teacher_id = :teacherId", nativeQuery = true)
+    void deleteJoinWithTeacher(@Param("teacherId") Long teacherId);
 }
