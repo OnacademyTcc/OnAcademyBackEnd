@@ -3,6 +3,9 @@ package com.onAcademy.tcc.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.onAcademy.tcc.model.FeedbackForm;
 import com.onAcademy.tcc.model.Student;
@@ -43,6 +46,10 @@ public interface FeedbackFormRepo extends JpaRepository<FeedbackForm, Long> {
      * @return Lista de feedbacks dos alunos da turma
      */
     List<FeedbackForm> findByRecipientStudentTurmaId(Long turmaId);
+    
+    @Modifying
+    @Query("DELETE FROM FeedbackForm f WHERE f.createdBy.id = :teacherId")
+    void deleteByCreatedById(@Param("teacherId") Long teacherId);
     
        
 }

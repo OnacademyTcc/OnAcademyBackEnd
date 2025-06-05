@@ -3,6 +3,9 @@ package com.onAcademy.tcc.repository;
 import com.onAcademy.tcc.model.Reminder;
 import com.onAcademy.tcc.model.Teacher;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -39,4 +42,8 @@ public interface ReminderRepo extends JpaRepository<Reminder, Long> {
      * @return Uma lista de lembretes criados por instituições.
      */
     List<Reminder> findByCreatedByInstitutionIsNotNull();
+    
+    @Modifying
+    @Query("DELETE FROM Reminder r WHERE r.createdBy.id = :teacherId")
+    void deleteByCreatedById(@Param("teacherId") Long teacherId);
 }

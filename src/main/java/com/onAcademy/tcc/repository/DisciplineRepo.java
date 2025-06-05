@@ -1,6 +1,9 @@
 package com.onAcademy.tcc.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.onAcademy.tcc.model.Discipline;
 
@@ -25,5 +28,9 @@ import com.onAcademy.tcc.model.Discipline;
  * @see com.onAcademy.tcc.model.Discipline
  */
 public interface DisciplineRepo extends JpaRepository<Discipline, Long> {
+	
+	@Modifying
+    @Query(value = "DELETE FROM teacher_discipline WHERE teacher_id = :teacherId", nativeQuery = true)
+    void deleteJoinWithTeacher(@Param("teacherId") Long teacherId);
 
 }

@@ -17,6 +17,10 @@ import com.onAcademy.tcc.model.ClassSt;
 import com.onAcademy.tcc.model.Discipline;
 import com.onAcademy.tcc.model.Teacher;
 import com.onAcademy.tcc.repository.DisciplineRepo;
+import com.onAcademy.tcc.repository.FeedbackByStudentRepo;
+import com.onAcademy.tcc.repository.FeedbackByTeacherRepo;
+import com.onAcademy.tcc.repository.FeedbackFormRepo;
+import com.onAcademy.tcc.repository.ReminderRepo;
 import com.onAcademy.tcc.repository.StudentRepo;
 import com.onAcademy.tcc.repository.TeacherRepo;
 import jakarta.mail.MessagingException;
@@ -56,6 +60,18 @@ public class TeacherService {
     
     @Autowired
     private DisciplineRepo disciplineRepo;
+    
+    @Autowired
+    private FeedbackByStudentRepo feedbackByStudentRepo;
+
+    @Autowired
+    private FeedbackByTeacherRepo feedbackByTeacherRepo;
+
+    @Autowired
+    private FeedbackFormRepo feedbackFormRepo;
+
+    @Autowired
+    private ReminderRepo reminderRepo;
     
     @Autowired
     private ImageUploaderService imageUploaderService;
@@ -336,23 +352,22 @@ public class TeacherService {
      */
     @Transactional
     public Teacher deletarTeacher(Long id) {
+        // 1) Verifica se existe
         Teacher teacher = teacherRepo.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Professor não encontrado com ID: " + id));
 
-        for (ClassSt classSt : teacher.getTeachers()) {
-            classSt.getClasses().remove(teacher);
-        }
-        
-        for (Discipline discipline : teacher.getDisciplines()) {
-            discipline.getTeachers().remove(teacher);
-        }
-        
-        teacher.getFeedback().clear();
-        teacher.getFeedbackProfessor().clear();
-        teacher.getFeedbackForm().clear();
-        teacher.getReminder().clear();
+        // === 1.1) Deleta tudo que é FK OneToMany (cascade manual) ===
+        feedbackByStudentRepo.deleteByRecipientTeacherId(id);
+        feedbackByTeacherRepo.deleteByCreatedById(id);
+        feedbackFormRepo.deleteByCreatedById(id);
+        reminderRepo.deleteByCreatedById(id);
 
+        // (b) Tabela de junção entre Teacher e Discipline
+        disciplineRepo.deleteJoinWithTeacher(id);
+
+        // === 2) Apaga o Teacher ===
         teacherRepo.delete(teacher);
+
         return teacher;
     }
 
